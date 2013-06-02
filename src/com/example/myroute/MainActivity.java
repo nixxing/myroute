@@ -50,6 +50,7 @@ public class MainActivity extends Activity {
 	TextView resultView;
 	private Spinner routes;
 	private Button btnSubmit;
+	String[] allRoutes;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +58,11 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		StrictMode.enableDefaults();
 		
-		resultView = (TextView) findViewById(R.id.result);
+	resultView = (TextView) findViewById(R.id.result);
 		
 		getLocation();
-		getData();
+		String data = getData("routes");
+		fillSpinner(data);
 	}
 
 	@Override
@@ -124,13 +126,13 @@ public class MainActivity extends Activity {
 	    }
 	}
 	
-	public void getData(){
+	public String getData(String url){
     	String result = "";
-    	resultView.setText("go!");
+    	String dataUrl = "http://192.168.0.207/TrackMyRoute/api/router/" + url;
     	InputStream isr = null;
     	try {
 	        HttpClient client = new DefaultHttpClient();  
-	        HttpGet get = new HttpGet("http://192.168.0.207/TrackMyRoute/api/router/routes");
+	        HttpGet get = new HttpGet(dataUrl);
 	        HttpResponse responseGet = client.execute(get);  
 	        HttpEntity resEntityGet = responseGet.getEntity();  
 	        if (resEntityGet != null) {  
@@ -142,63 +144,100 @@ public class MainActivity extends Activity {
 		    e.printStackTrace();
 		    resultView.setText("fail at get");
 		}
-    //convert response to string
-    try{
-            BufferedReader reader = new BufferedReader(new InputStreamReader(isr,"UTF-8"),8);
-            StringBuilder sb = new StringBuilder();
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                    sb.append(line + "\n");
-            }
-            isr.close();
-     
-            result=sb.toString();
-            resultView.setText("string: " + result);
-    }
-    catch(Exception e){
-            Log.e("log_tag", "Error  converting result "+e.toString());
-            //resultVieww.setText("fail at sb");
-    }
-     
-    //parse json data
-    try {
-    	   
-    	   JSONArray arr = new JSONArray(result);
-    	   JSONObject jObj = arr.getJSONObject(0);
-    	   routes = (Spinner) findViewById(R.id.spinner2);
-    	   List<String> list = new ArrayList<String>();
-    	   String data = "";
-    	   int n = arr.length();
-           for (int i = 0; i < n; i++) {
-               // GET INDIVIDUAL JSON OBJECT FROM JSON ARRAY
-               JSONObject jo = arr.getJSONObject(i);
-                
-               data = data + " " + jo.getString("route_name");
-                
-               list.add(jo.getString("route_name"));
-           }
-           ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-        	android.R.layout.simple_spinner_item, list);
-           dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        	routes.setAdapter(dataAdapter);
-        	
-        	resultView.setText("\n" + data);
-    	   
+	    //convert response to string
+	    try{
+	            BufferedReader reader = new BufferedReader(new InputStreamReader(isr,"UTF-8"),8);
+	            StringBuilder sb = new StringBuilder();
+	            String line = null;
+	            while ((line = reader.readLine()) != null) {
+	                    sb.append(line + "\n");
+	            }
+	            isr.close();
+	     
+	            result=sb.toString();
+	            resultView.setText("string: " + result);
+	    }
+	    catch(Exception e){
+	            Log.e("log_tag", "Error  converting result "+e.toString());
+	            //resultVieww.setText("fail at sb");
+	    }
+	    return result;
+	}
+     	
+	public void setCheckpoints(String result) {
+	    //parse json data
+	    try {
+	    	   
+	    	   JSONArray arr = new JSONArray(result);
+	    	   JSONObject jObj = arr.getJSONObject(0);
+	    	   String data = "";
+	    	   int n = arr.length();
+	           for (int i = 0; i < n; i++) {
+	               JSONObject jo = arr.getJSONObject(i);
+
+	               //Fill array
+	               allRoutes[(int)jo.getInt("id")] = (String)jo.getString("route_name");
+
+	           }
+	        	
+	        	resultView.setText("\n" + data);
+	    	   
     	  } catch (JSONException e) {
     	   // TODO Auto-generated catch block
     	   e.printStackTrace();
     	   //resultVieww.setText("fail at json");
-    	   
     	  }
-    
-    }
+	}
 	
+	public void fillSpinner(String result) {
+	    //parse json data
+	    try {
+	    	   
+	    	   JSONArray arr = new JSONArray(result);
+	    	   JSONObject jObj = arr.getJSONObject(0);
+	    	   routes = (Spinner) findViewById(R.id.spinner2);
+	    	   List<String> list = new ArrayList<String>();
+	    	   String data = "";
+	    	   int n = arr.length();
+	    	   allRoutes = new String[(n + 1)]; //Declare array
+	           for (int i = 0; i < n; i++) {
+	               JSONObject jo = arr.getJSONObject(i);
+	                
+	               data = data + " " + jo.getString("route_name");
+	               
+	               //Fill array
+	               allRoutes[(int)jo.getInt("id")] = (String)jo.getString("route_name");
+	                
+	               list.add(jo.getString("route_name"));
+	           }
+	           ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+	        	android.R.layout.simple_spinner_item, list);
+	           dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	        	routes.setAdapter(dataAdapter);
+	        	
+	        	resultView.setText("\n" + data);
+	    	   
+    	  } catch (JSONException e) {
+    	   // TODO Auto-generated catch block
+    	   e.printStackTrace();
+    	   //resultVieww.setText("fail at json");
+    	  }
+	}
+		
 	
 	public void selectRoute(View view) {
 		 
 		routes = (Spinner) findViewById(R.id.spinner2);
-		resultView.setText(routes.getSelectedItem().toString());
- 
 		
+		//resultView.setText(routes.getSelectedItem().toString());
+		
+		int id = 0;
+		
+		for (int r=1; r<allRoutes.length; r++) {
+			if(allRoutes[r] == routes.getSelectedItem().toString()) {
+				id = r;
+			}
+		}
+		resultView.setText(Integer.toString(id));
 	}
 }

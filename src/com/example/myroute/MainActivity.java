@@ -48,9 +48,12 @@ public class MainActivity extends Activity {
 	double latitude;
 	double longitude;
 	TextView resultView;
+	TextView description;
 	private Spinner routes;
 	private Button btnSubmit;
 	String[] allRoutes;
+	private boolean firstLoad = false;
+	private int currentID = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,7 @@ public class MainActivity extends Activity {
 		StrictMode.enableDefaults();
 		
 	resultView = (TextView) findViewById(R.id.result);
+	description = (TextView) findViewById(R.id.description);
 		
 		getLocation();
 		String data = getData("routes");
@@ -100,23 +104,27 @@ public class MainActivity extends Activity {
 									latitude = gps.getLatitude();
 									longitude = gps.getLongitude();
 								}else{
-									// can't get location
-									// GPS or Network is not enabled
 									// Ask user to enable GPS/network in settings
 									gps.showSettingsAlert();
 								}
 					            //******************************************//
 								LatLng lastLatLng = new LatLng(latitude, longitude);
-								//resultView.setText(latitude + " and " + longitude);
+								resultView.setText("lat: " + latitude + ", long= " + longitude);
 								userMarker = map.addMarker(new MarkerOptions()
 							        .position(lastLatLng)
 							        .title("You're here now!")
 							        .snippet("Follow the route ;)")
 							        .icon(BitmapDescriptorFactory
-							        .fromResource(R.drawable.marker)));
+							        .fromResource(R.drawable.popeye)));
+								
+								// Check whether user close to a checkpoint or not
+								checkPoint(latitude, longitude);
 
-								    // Move the camera instantly to hamburg with a zoom of 15.
-								    map.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLatLng, 15));
+								// Move the camera instantly to the 
+								if(firstLoad == false) {
+									map.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLatLng, 15));
+									firstLoad = true;
+								}
 			                }
 			            });
 			        }
@@ -124,6 +132,36 @@ public class MainActivity extends Activity {
 			    timer2.schedule(timertask, 3000, 3000); // Update every 3s!
 			}
 	    }
+	}
+	
+	public void checkPoint(double lati, double longi) {
+		String data = getData("route_info/" + currentID);
+		
+		try {  
+    	   JSONArray arr = new JSONArray(data);
+    	   JSONObject jObj = arr.getJSONObject(0);
+    	   String title = "";
+    	   int n = arr.length();
+           for (int i = 0; i < n; i++) {
+               JSONObject jo = arr.getJSONObject(i);
+
+               //Fill array
+               latitude = jo.getDouble("latitude");
+               longitude = jo.getDouble("longitude");
+               title = jo.getString("checkpoint");
+               if((lati * 100000) > (latitude * 100000 - 60) && (lati * 100000) < (latitude * 100000 + 60)) {
+            	   if((longi * 1000000) > (longitude * 1000000 - 1000) && (longi * 1000000) < (longitude * 1000000 + 1000)) {
+                	   description.setText("you're close!");
+                   }
+               }
+           }
+	    	   
+ 	  } catch (JSONException e) {
+ 	   // TODO Auto-generated catch block
+ 	   e.printStackTrace();
+ 	   resultView.setText("fail at json");
+ 	  }
+		
 	}
 	
 	public String getData(String url){
@@ -137,7 +175,6 @@ public class MainActivity extends Activity {
 	        HttpEntity resEntityGet = responseGet.getEntity();  
 	        if (resEntityGet != null) {  
 	           //do something with the response
-	           resultView.setText("fail");
 	           isr = resEntityGet.getContent();
 	        }
 		} catch (Exception e) {
@@ -186,7 +223,7 @@ public class MainActivity extends Activity {
     	  } catch (JSONException e) {
     	   // TODO Auto-generated catch block
     	   e.printStackTrace();
-    	   //resultVieww.setText("fail at json");
+    	   resultView.setText("fail at json");
     	  }
 	}
 	
@@ -196,7 +233,7 @@ public class MainActivity extends Activity {
 	        .position(lastLatLng)
 	        .title(title)
 	        .icon(BitmapDescriptorFactory
-	        .fromResource(R.drawable.marker)));
+	        .fromResource(R.drawable.spinach)));
 	}
 	
 	public void fillSpinner(String result) {
@@ -230,7 +267,7 @@ public class MainActivity extends Activity {
     	  } catch (JSONException e) {
     	   // TODO Auto-generated catch block
     	   e.printStackTrace();
-    	   //resultVieww.setText("fail at json");
+    	   resultView.setText("fail at json");
     	  }
 	}
 		
@@ -241,14 +278,14 @@ public class MainActivity extends Activity {
 		
 		//resultView.setText(routes.getSelectedItem().toString());
 		
-		int id = 0;
+		currentID = 0;
 		
 		for (int r=1; r<allRoutes.length; r++) {
 			if(allRoutes[r] == routes.getSelectedItem().toString()) {
-				id = r;
+				currentID = r;
 			}
 		}
-		String result = getData("route_info/" + Integer.toString(id));
+		String result = getData("route_info/" + Integer.toString(currentID));
 		setCheckpoints(result);
 		//resultView.setText(Integer.toString(id));
 	}

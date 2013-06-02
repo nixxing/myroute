@@ -113,7 +113,7 @@ public class MainActivity extends Activity {
 							        .title("You're here now!")
 							        .snippet("Follow the route ;)")
 							        .icon(BitmapDescriptorFactory
-							        .fromResource(R.drawable.ic_launcher)));
+							        .fromResource(R.drawable.marker)));
 
 								    // Move the camera instantly to hamburg with a zoom of 15.
 								    map.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLatLng, 15));
@@ -155,7 +155,7 @@ public class MainActivity extends Activity {
 	            isr.close();
 	     
 	            result=sb.toString();
-	            resultView.setText("string: " + result);
+	            //resultView.setText("string: " + result);
 	    }
 	    catch(Exception e){
 	            Log.e("log_tag", "Error  converting result "+e.toString());
@@ -170,23 +170,33 @@ public class MainActivity extends Activity {
 	    	   
 	    	   JSONArray arr = new JSONArray(result);
 	    	   JSONObject jObj = arr.getJSONObject(0);
-	    	   String data = "";
+	    	   String title = "";
 	    	   int n = arr.length();
 	           for (int i = 0; i < n; i++) {
 	               JSONObject jo = arr.getJSONObject(i);
 
 	               //Fill array
-	               allRoutes[(int)jo.getInt("id")] = (String)jo.getString("route_name");
-
+	               latitude = jo.getDouble("latitude");
+	               longitude = jo.getDouble("longitude");
+	               title = jo.getString("checkpoint");
+	               
+	               setMarker(latitude, longitude, title);
 	           }
-	        	
-	        	resultView.setText("\n" + data);
 	    	   
     	  } catch (JSONException e) {
     	   // TODO Auto-generated catch block
     	   e.printStackTrace();
     	   //resultVieww.setText("fail at json");
     	  }
+	}
+	
+	public void setMarker(double lati, double longi, String title) {
+		LatLng lastLatLng = new LatLng(lati, longi);
+		map.addMarker(new MarkerOptions()
+	        .position(lastLatLng)
+	        .title(title)
+	        .icon(BitmapDescriptorFactory
+	        .fromResource(R.drawable.marker)));
 	}
 	
 	public void fillSpinner(String result) {
@@ -238,6 +248,8 @@ public class MainActivity extends Activity {
 				id = r;
 			}
 		}
-		resultView.setText(Integer.toString(id));
+		String result = getData("route_info/" + Integer.toString(id));
+		setCheckpoints(result);
+		//resultView.setText(Integer.toString(id));
 	}
 }

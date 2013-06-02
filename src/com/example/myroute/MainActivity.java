@@ -31,6 +31,8 @@ import android.os.Handler;
 import android.os.StrictMode;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -61,8 +63,13 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		StrictMode.enableDefaults();
 		
-	resultView = (TextView) findViewById(R.id.result);
-	description = (TextView) findViewById(R.id.description);
+		resultView = (TextView) findViewById(R.id.result);
+		description = (TextView) findViewById(R.id.description);
+		btnSubmit = (Button) findViewById(R.id.btnSubmit);
+		description.setMovementMethod(ScrollingMovementMethod.getInstance());
+		
+		//description.setTextColor(Color.WHITE);
+		//btnSubmit.setTextColor(Color.WHITE);
 		
 		getLocation();
 		String data = getData("routes");
@@ -208,6 +215,9 @@ public class MainActivity extends Activity {
 	}
      	
 	public void setCheckpoints(String result) {
+		
+		map.clear(); // Get rid of all previous marker if a new route is selected
+		
 	    //parse json data
 	    try {
 	    	   
@@ -260,14 +270,14 @@ public class MainActivity extends Activity {
                //Fill array
                allRoutes[(int)jo.getInt("id")] = (String)jo.getString("route_name");
                 
-               list.add(jo.getString("route_name"));
+               list.add(jo.getString("route_name") + " (" + jo.getString("city") + ")");
            }
            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-        	android.R.layout.simple_spinner_item, list);
+           R.drawable.spinner_text, list);
            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        	routes.setAdapter(dataAdapter);
+           routes.setAdapter(dataAdapter);
         	
-        	resultView.setText("\n" + data);
+           resultView.setText("\n" + data);
     	   
 	  } catch (JSONException e) {
 	   // TODO Auto-generated catch block
@@ -280,7 +290,6 @@ public class MainActivity extends Activity {
 	public void selectRoute(View view) {
 		 
 		routes = (Spinner) findViewById(R.id.spinner2);
-		
 		//resultView.setText(routes.getSelectedItem().toString());
 		
 		currentID = 0;
@@ -290,6 +299,7 @@ public class MainActivity extends Activity {
 				currentID = r;
 			}
 		}
+		
 		String result = getData("route_info/" + Integer.toString(currentID));
 		setCheckpoints(result);
 		//resultView.setText(Integer.toString(id));

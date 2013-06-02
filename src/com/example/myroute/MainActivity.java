@@ -129,7 +129,7 @@ public class MainActivity extends Activity {
 			            });
 			        }
 			    };
-			    timer2.schedule(timertask, 3000, 3000); // Update every 3s!
+			    timer2.schedule(timertask, 3000, 5000); // Update every 5s!
 			}
 	    }
 	}
@@ -151,9 +151,15 @@ public class MainActivity extends Activity {
                title = jo.getString("checkpoint");
                if((lati * 100000) > (latitude * 100000 - 60) && (lati * 100000) < (latitude * 100000 + 60)) {
             	   if((longi * 1000000) > (longitude * 1000000 - 1000) && (longi * 1000000) < (longitude * 1000000 + 1000)) {
-                	   description.setText("you're close!");
+                	   description.setText(jo.getString("description"));
                    }
+            	   else {
+            		   description.setText("Walk to a checkpoint if you want to learn something new.");
+            	   }
                }
+               else {
+        		   description.setText("Walk to a checkpoint if you want to learn something new. Walk to a checkpoint if you want to learn something new. Walk to a checkpoint if you want to learn something new. Walk to a checkpoint if you want to learn something new.");
+        	   }
            }
 	    	   
  	  } catch (JSONException e) {
@@ -183,16 +189,16 @@ public class MainActivity extends Activity {
 		}
 	    //convert response to string
 	    try{
-	            BufferedReader reader = new BufferedReader(new InputStreamReader(isr,"UTF-8"),8);
-	            StringBuilder sb = new StringBuilder();
-	            String line = null;
-	            while ((line = reader.readLine()) != null) {
-	                    sb.append(line + "\n");
-	            }
-	            isr.close();
-	     
-	            result=sb.toString();
-	            //resultView.setText("string: " + result);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(isr,"UTF-8"),8);
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                    sb.append(line + "\n");
+            }
+            isr.close();
+     
+            result=sb.toString();
+            //resultView.setText("string: " + result);
 	    }
 	    catch(Exception e){
 	            Log.e("log_tag", "Error  converting result "+e.toString());
@@ -239,36 +245,35 @@ public class MainActivity extends Activity {
 	public void fillSpinner(String result) {
 	    //parse json data
 	    try {
-	    	   
-	    	   JSONArray arr = new JSONArray(result);
-	    	   JSONObject jObj = arr.getJSONObject(0);
-	    	   routes = (Spinner) findViewById(R.id.spinner2);
-	    	   List<String> list = new ArrayList<String>();
-	    	   String data = "";
-	    	   int n = arr.length();
-	    	   allRoutes = new String[(n + 1)]; //Declare array
-	           for (int i = 0; i < n; i++) {
-	               JSONObject jo = arr.getJSONObject(i);
-	                
-	               data = data + " " + jo.getString("route_name");
-	               
-	               //Fill array
-	               allRoutes[(int)jo.getInt("id")] = (String)jo.getString("route_name");
-	                
-	               list.add(jo.getString("route_name"));
-	           }
-	           ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-	        	android.R.layout.simple_spinner_item, list);
-	           dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-	        	routes.setAdapter(dataAdapter);
-	        	
-	        	resultView.setText("\n" + data);
-	    	   
-    	  } catch (JSONException e) {
-    	   // TODO Auto-generated catch block
-    	   e.printStackTrace();
-    	   resultView.setText("fail at json");
-    	  }
+    	   JSONArray arr = new JSONArray(result);
+    	   JSONObject jObj = arr.getJSONObject(0);
+    	   routes = (Spinner) findViewById(R.id.spinner2);
+    	   List<String> list = new ArrayList<String>();
+    	   String data = "";
+    	   int n = arr.length();
+    	   allRoutes = new String[(n + 1)]; //Declare array
+           for (int i = 0; i < n; i++) {
+               JSONObject jo = arr.getJSONObject(i);
+                
+               data = data + " " + jo.getString("route_name");
+               
+               //Fill array
+               allRoutes[(int)jo.getInt("id")] = (String)jo.getString("route_name");
+                
+               list.add(jo.getString("route_name"));
+           }
+           ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+        	android.R.layout.simple_spinner_item, list);
+           dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        	routes.setAdapter(dataAdapter);
+        	
+        	resultView.setText("\n" + data);
+    	   
+	  } catch (JSONException e) {
+	   // TODO Auto-generated catch block
+	   e.printStackTrace();
+	   resultView.setText("fail at json");
+	  }
 	}
 		
 	

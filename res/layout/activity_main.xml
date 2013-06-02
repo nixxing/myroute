@@ -37,7 +37,7 @@
             android:layout_alignLeft="@+id/spinner2"
             android:layout_below="@+id/spinner2"
             android:onClick="selectRoute" 
-            android:text="Button" />
+            android:text="Submit" />
 
         <TextView
             android:id="@+id/description"
@@ -46,7 +46,6 @@
             android:layout_alignLeft="@+id/btnSubmit"
             android:layout_below="@+id/btnSubmit"
             android:layout_marginTop="18dp"
-            android:text="Medium Text"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

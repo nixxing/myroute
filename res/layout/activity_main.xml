@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/result"
-        android:layout_marginTop="120dp" />
+        android:layout_marginTop="170dp" />
 
     <Button
         android:id="@+id/btnSubmit"
@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/btnSubmit"
         android:layout_below="@+id/btnSubmit"
-        android:maxLines = "2"
+        android:maxLines = "5"
 		android:scrollbars = "vertical"
         android:layout_marginTop="18dp"
         android:textAppearance="?android:attr/textAppearanceMedium" />

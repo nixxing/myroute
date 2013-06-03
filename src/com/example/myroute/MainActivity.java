@@ -36,6 +36,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -49,7 +50,6 @@ public class MainActivity extends Activity {
 	GPSTracker gps;
 	double latitude;
 	double longitude;
-	TextView resultView;
 	TextView description;
 	private Spinner routes;
 	private Button btnSubmit;
@@ -65,13 +65,11 @@ public class MainActivity extends Activity {
 		StrictMode.enableDefaults();
 		
 		// Let's get everything we need from our layout
-		resultView = (TextView) findViewById(R.id.result);
 		description = (TextView) findViewById(R.id.description);
 		btnSubmit = (Button) findViewById(R.id.btnSubmit);
 		
 		// Make sure we are able to scroll on the description field
 		description.setMovementMethod(ScrollingMovementMethod.getInstance());
-		
 		
 		getLocation();
 		String data = getData("routes");
@@ -85,6 +83,8 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
+	
+	// Set up the map and use the GPSTracker class to get the position of the user
 	public void getLocation(){
 		if(map==null){
 			//get the map
@@ -99,7 +99,7 @@ public class MainActivity extends Activity {
 			            handler.post(new Runnable() {
 			                public void run() {
 			                	
-			                	//Remove the user everytime it updates
+			                	// Remove the user everytime it updates
 			                	if(userMarker != null) {
 			        	    		userMarker.remove();
 			        	    	}
@@ -107,7 +107,7 @@ public class MainActivity extends Activity {
 			                	locMan = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 								//*************get last location*************//
 								gps = new GPSTracker(MainActivity.this);
-					            // check if GPS enabled    
+					            // Check if GPS enabled    
 								if(gps.canGetLocation()){
 					               
 									latitude = gps.getLatitude();
@@ -118,7 +118,8 @@ public class MainActivity extends Activity {
 								}
 					            //******************************************//
 								LatLng lastLatLng = new LatLng(latitude, longitude);
-								resultView.setText("lat: " + latitude + ", long= " + longitude);
+								
+								// Show the user
 								userMarker = map.addMarker(new MarkerOptions()
 							        .position(lastLatLng)
 							        .title("You're here now!")
@@ -143,42 +144,43 @@ public class MainActivity extends Activity {
 	    }
 	}
 	
+	// Check whether you are close to a checkpoint or not
 	public void checkPoint(double lati, double longi) {
 		String data = getData("route_info/" + currentID);
 		
 		try {  
     	   JSONArray arr = new JSONArray(data);
-    	   JSONObject jObj = arr.getJSONObject(0);
     	   String title = "";
     	   int n = arr.length();
            for (int i = 0; i < n; i++) {
                JSONObject jo = arr.getJSONObject(i);
 
-               //Fill array
+               // Fill array
                latitude = jo.getDouble("latitude");
                longitude = jo.getDouble("longitude");
                title = jo.getString("checkpoint");
                if((lati * 100000) > (latitude * 100000 - 60) && (lati * 100000) < (latitude * 100000 + 60)) {
             	   if((longi * 1000000) > (longitude * 1000000 - 1000) && (longi * 1000000) < (longitude * 1000000 + 1000)) {
-                	   description.setText(jo.getString("description"));
+                	   // Show the checkpoint its description!
+            		   description.setText(jo.getString("description"));
                    }
             	   else {
             		   description.setText("Walk to a checkpoint if you want to learn something new.");
             	   }
                }
                else {
-        		   description.setText("Walk to a checkpoint if you want to learn something new. Walk to a checkpoint if you want to learn something new. Walk to a checkpoint if you want to learn something new. Walk to a checkpoint if you want to learn something new.");
+        		   description.setText("Walk to a checkpoint if you want to learn something new.");
         	   }
            }
 	    	   
  	  } catch (JSONException e) {
  	   // TODO Auto-generated catch block
  	   e.printStackTrace();
- 	   resultView.setText("fail at json");
  	  }
 		
 	}
 	
+	// Get a json string from the api
 	public String getData(String url){
     	String result = "";
     	String dataUrl = baseURL + url;
@@ -194,9 +196,8 @@ public class MainActivity extends Activity {
 	        }
 		} catch (Exception e) {
 		    e.printStackTrace();
-		    resultView.setText("fail at get");
 		}
-	    //convert response to string
+	    // Convert response to string
 	    try{
             BufferedReader reader = new BufferedReader(new InputStreamReader(isr,"UTF-8"),8);
             StringBuilder sb = new StringBuilder();
@@ -207,24 +208,22 @@ public class MainActivity extends Activity {
             isr.close();
      
             result=sb.toString();
-            //resultView.setText("string: " + result);
 	    }
 	    catch(Exception e){
-	            Log.e("log_tag", "Error  converting result "+e.toString());
-	            //resultVieww.setText("fail at sb");
+            Log.e("log_tag", "Error  converting result "+e.toString());
 	    }
 	    return result;
 	}
-     	
+    
+	// Use the json string to set all checkpoints of a route on the map
 	public void setCheckpoints(String result) {
 		
 		map.clear(); // Get rid of all previous marker if a new route is selected
 		
-	    //parse json data
+	    // Parse json data
 	    try {
 	    	   
 	    	   JSONArray arr = new JSONArray(result);
-	    	   JSONObject jObj = arr.getJSONObject(0);
 	    	   String title = "";
 	    	   int n = arr.length();
 	           for (int i = 0; i < n; i++) {
@@ -238,11 +237,10 @@ public class MainActivity extends Activity {
 	               setMarker(latitude, longitude, title);
 	           }
 	    	   
-    	  } catch (JSONException e) {
-    	   // TODO Auto-generated catch block
-    	   e.printStackTrace();
-    	   resultView.setText("fail at json");
-    	  }
+    	} catch (JSONException e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
+    	}
 	}
 	
 	// Placing the spinach on the map
@@ -281,17 +279,14 @@ public class MainActivity extends Activity {
            R.drawable.spinner_text, list);
            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
            routes.setAdapter(dataAdapter);
-        	
-           resultView.setText("\n" + data);
     	   
-	  } catch (JSONException e) {
-	   // TODO Auto-generated catch block
-	   e.printStackTrace();
-	   resultView.setText("fail at json");
-	  }
+	    } catch (JSONException e) {
+	    	// TODO Auto-generated catch block
+	    	e.printStackTrace();
+	    }
 	}
 		
-	
+	// Get everything set up once a route is selected
 	public void selectRoute(View view) {
 		 
 		routes = (Spinner) findViewById(R.id.spinner2);
@@ -303,12 +298,10 @@ public class MainActivity extends Activity {
 		for (int r=1; r<allRoutes.length; r++) {
 			if(allRoutes[r] == test) {
 				currentID = r;
-				//description.setText(Integer.toString(r));
 			}
 		}
 		
 		String result = getData("route_info/" + Integer.toString(currentID));
 		setCheckpoints(result);
-		//resultView.setText(Integer.toString(id));
 	}
 }

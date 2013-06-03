@@ -63,8 +63,7 @@ header p {
 /* Logo (header) */
 
 #logo {
-	margin: 0px;
-	padding: 2.307692307692308em 0px;
+	padding: 2.307692307692308em;
 	color: #000000;
 	width: 100%;
 }
@@ -117,80 +116,57 @@ header p {
 	position: relative;
 }
 
-#contactform {
-    width: 400px;
-    padding: 20px;
-    overflow:auto;
-}
-
 h3 {
 	font-family: Arial, Verdana;
-    display: block;
-    font-weight: bold;
-    margin-left:130px;
-    width: 200px;
-    line-height: 25px;
-    font-size: 20px;
+	display: block;
+	font-weight: bold;
+	margin-left: 33%;
+	line-height: 2em;
+	font-size: 1.40em;
 }
 label {
     font-family: Arial, Verdana;
-    display: block;
-    float: left;
-    font-weight: bold;
-    margin-right:10px;
-    text-align: right;
-    width: 120px;
-    line-height: 25px;
-    font-size: 15px;
+	display: block;
+	float: left;
+	font-weight: bold;
+	margin-right: 2%;
+	text-align: right;
+	width: 30%;
+	line-height: 2em;
+	font-size: 1em;
 }
 
 .input{
     font-family: Arial, Verdana;
-    font-size: 15px;
-    padding: 5px;
+    font-size: 1em;
+    padding: 0.5em;
     border: 1px solid #b9bdc1;
-    width: 250px;
+    width: 63%;
     color: #797979;
 }
 
 .button{
     float: right;
-    margin-right: 8px;
-    font-weight: bold;
-    line-height: 1;
-    padding: 6px 10px;
-    cursor:pointer;
-    color: #fff;
- 
-    text-align: center;
-    text-shadow: 0 -1px 1px #64799e;
+	margin-right: 2%;
+	font-weight: bold;
+	line-height: 75%;
+	padding: 2% 2em;
+	cursor: pointer;
+	color: #fff;
+	text-align: center;
+	text-shadow: 0 -1em 1em #64799e;
  
     /* Background gradient */
     background: #a5b8da;
-    background: -moz-linear-gradient
-       (top, #a5b8da 0%, #7089b3 100%);
-    background: -webkit-gradient
-       (linear, 0% 0%, 0% 100%,
-       from(#a5b8da), to(#7089b3));
  
     /* Border style */
-    border: 1px solid #5c6f91;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
- 
-    /* Box shadow */
-    -moz-box-shadow: inset 0 1px 0 0 #aec3e5;
-    -webkit-box-shadow: inset 0 1px 0 0 #aec3e5;
-    box-shadow: inset 0 1px 0 0 #aec3e5;
- 
+    border: 0.1em solid #5c6f91;
+    border-radius: 2em;
 }
 
 #sidebar {
-	/*float: right;*/
 	width: 40%;
-	margin: 0px;
-	margin-left: 1.8em;
+	margin-left: 9.8em;
 	float: left;
 }
 
@@ -226,6 +202,7 @@ footer a {
 	header div#logo h1 {
 		font-size: 4em;
 	}
+
 
 	* {
 		font-size: 1em;

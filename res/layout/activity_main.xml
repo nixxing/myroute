@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/result"
-        android:layout_marginTop="106dp" />
+        android:layout_marginTop="120dp" />
 
     <Button
         android:id="@+id/btnSubmit"
@@ -40,7 +40,8 @@
         android:layout_alignLeft="@+id/spinner2"
         android:layout_below="@+id/spinner2"
         android:onClick="selectRoute" 
-        android:textColor="#FFFFFF" 
+        android:textColor="#FFFFFF"
+        android:background="#61B4CF" 
         android:textSize="15sp" 
         android:text="submit" />
 

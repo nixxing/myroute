@@ -56,6 +56,7 @@ public class MainActivity extends Activity {
 	String[] allRoutes;
 	private boolean firstLoad = false;
 	private int currentID = 0;
+	private String baseURL = "http://192.168.0.207/TrackMyRoute/api/router/";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,13 +64,14 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		StrictMode.enableDefaults();
 		
+		// Let's get everything we need from our layout
 		resultView = (TextView) findViewById(R.id.result);
 		description = (TextView) findViewById(R.id.description);
 		btnSubmit = (Button) findViewById(R.id.btnSubmit);
+		
+		// Make sure we are able to scroll on the description field
 		description.setMovementMethod(ScrollingMovementMethod.getInstance());
 		
-		//description.setTextColor(Color.WHITE);
-		//btnSubmit.setTextColor(Color.WHITE);
 		
 		getLocation();
 		String data = getData("routes");
@@ -89,7 +91,7 @@ public class MainActivity extends Activity {
 	    	map = ((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
 			//check in case map/ Google Play services not available
 			if(map!=null){ 
-				
+				// We're using a timer to update the map every 5 s
 			    final Handler handler = new Handler(); 
 			    Timer timer2 = new Timer(); 
 			    TimerTask timertask = new TimerTask() {
@@ -102,10 +104,10 @@ public class MainActivity extends Activity {
 			        	    		userMarker.remove();
 			        	    	}
 			                	
-			                	 locMan = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+			                	locMan = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 								//*************get last location*************//
 								gps = new GPSTracker(MainActivity.this);
-					          // check if GPS enabled    
+					            // check if GPS enabled    
 								if(gps.canGetLocation()){
 					               
 									latitude = gps.getLatitude();
@@ -127,7 +129,7 @@ public class MainActivity extends Activity {
 								// Check whether user close to a checkpoint or not
 								checkPoint(latitude, longitude);
 
-								// Move the camera instantly to the 
+								// Move the camera instantly to the user (only the first time)
 								if(firstLoad == false) {
 									map.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLatLng, 15));
 									firstLoad = true;
@@ -136,7 +138,7 @@ public class MainActivity extends Activity {
 			            });
 			        }
 			    };
-			    timer2.schedule(timertask, 3000, 5000); // Update every 5s!
+			    timer2.schedule(timertask, 3000, 5000); // First run at 3s, update every 5s!
 			}
 	    }
 	}
@@ -179,7 +181,7 @@ public class MainActivity extends Activity {
 	
 	public String getData(String url){
     	String result = "";
-    	String dataUrl = "http://192.168.0.207/TrackMyRoute/api/router/" + url;
+    	String dataUrl = baseURL + url;
     	InputStream isr = null;
     	try {
 	        HttpClient client = new DefaultHttpClient();  
@@ -243,6 +245,7 @@ public class MainActivity extends Activity {
     	  }
 	}
 	
+	// Placing the spinach on the map
 	public void setMarker(double lati, double longi, String title) {
 		LatLng lastLatLng = new LatLng(lati, longi);
 		map.addMarker(new MarkerOptions()
@@ -252,12 +255,14 @@ public class MainActivity extends Activity {
 	        .fromResource(R.drawable.spinach)));
 	}
 	
+	// Filling the spinner with the routes we got from the api
 	public void fillSpinner(String result) {
 	    //parse json data
 	    try {
     	   JSONArray arr = new JSONArray(result);
     	   JSONObject jObj = arr.getJSONObject(0);
     	   routes = (Spinner) findViewById(R.id.spinner2);
+    	   // We put them in a list so we can easily add it to the spinner
     	   List<String> list = new ArrayList<String>();
     	   String data = "";
     	   int n = arr.length();
@@ -270,7 +275,7 @@ public class MainActivity extends Activity {
                //Fill array
                allRoutes[(int)jo.getInt("id")] = (String)jo.getString("route_name");
                 
-               list.add(jo.getString("route_name") + " (" + jo.getString("city") + ")");
+               list.add(jo.getString("route_name")/* + " (" + jo.getString("city") + ")"*/);
            }
            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
            R.drawable.spinner_text, list);
@@ -290,13 +295,15 @@ public class MainActivity extends Activity {
 	public void selectRoute(View view) {
 		 
 		routes = (Spinner) findViewById(R.id.spinner2);
-		//resultView.setText(routes.getSelectedItem().toString());
+		description.setText(routes.getSelectedItem().toString());
 		
 		currentID = 0;
-		
+		String test = routes.getSelectedItem().toString();
+		//String test1 = test.split("\\s")[0];
 		for (int r=1; r<allRoutes.length; r++) {
-			if(allRoutes[r] == routes.getSelectedItem().toString()) {
+			if(allRoutes[r] == test) {
 				currentID = r;
+				//description.setText(Integer.toString(r));
 			}
 		}
 		

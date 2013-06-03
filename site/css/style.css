@@ -1,0 +1,238 @@
+
+/*
+Design by Free CSS Templates
+http://www.freecsstemplates.org
+Released for free under a Creative Commons Attribution 2.5 License
+*/
+
+body {
+	margin: 0;
+	padding: 0;
+	background: #DAE2CF url(../img/img02.jpg) repeat left top;
+	font-family: Arial, Verdana;
+	color: #3B3B3B;
+}
+
+h1, h2, h3 {
+	margin: 0px;
+	padding: 0px;
+	font-weight: normal;
+}
+
+p, ul, ol {
+	margin-top: 0;
+}
+
+ul, ol {
+}
+
+a {
+	text-decoration: none;
+	color: #4C5C37;
+}
+
+* {
+	font-size: 0.94em;
+    font-family: Arial, Verdana;
+}
+
+/* Content */
+
+div.content-wrapper {
+	max-width: 68.75em;
+	margin: auto;
+}
+
+/* Header */
+
+header {
+	clear: both;
+	width: 80%;
+	margin: 0px auto;
+}
+
+header p {
+	color: white;
+	text-align: center;
+}
+
+#header-wrapper {
+	width: 100%;
+}
+
+/* Logo (header) */
+
+#logo {
+	margin: 0px;
+	padding: 2.307692307692308em 0px;
+	color: #000000;
+	width: 100%;
+}
+
+#logo p {
+	margin: 0;
+	padding: 0;
+}
+.title {
+	margin: auto;
+	width: 3.90909090909091%;
+	min-width: 207px;
+}
+
+#logo .title img {
+	width: 80%;
+}
+
+#logo h1 span {
+}
+
+#logo a {
+	border: none;
+	background: none;
+	text-decoration: none;
+	color: #FFF;
+}
+/* Page */
+
+#wrapper
+{
+	overflow: hidden;
+	padding-bottom: 3.076923076923077em;
+	width: 100%;
+}
+
+#page {
+	overflow: hidden;
+	width: 90.90909090909091%;
+	margin: 0px auto;
+	padding: 4.54545454545455%;
+	background: #FFFFFF;
+	border-radius: 1.5em;
+}
+
+/* Content */
+
+#content {
+	width: 40%;
+	position: relative;
+}
+
+#contactform {
+    width: 400px;
+    padding: 20px;
+    overflow:auto;
+}
+
+h3 {
+	font-family: Arial, Verdana;
+    display: block;
+    font-weight: bold;
+    margin-left:130px;
+    width: 200px;
+    line-height: 25px;
+    font-size: 20px;
+}
+label {
+    font-family: Arial, Verdana;
+    display: block;
+    float: left;
+    font-weight: bold;
+    margin-right:10px;
+    text-align: right;
+    width: 120px;
+    line-height: 25px;
+    font-size: 15px;
+}
+
+.input{
+    font-family: Arial, Verdana;
+    font-size: 15px;
+    padding: 5px;
+    border: 1px solid #b9bdc1;
+    width: 250px;
+    color: #797979;
+}
+
+.button{
+    float: right;
+    margin-right: 8px;
+    font-weight: bold;
+    line-height: 1;
+    padding: 6px 10px;
+    cursor:pointer;
+    color: #fff;
+ 
+    text-align: center;
+    text-shadow: 0 -1px 1px #64799e;
+ 
+    /* Background gradient */
+    background: #a5b8da;
+    background: -moz-linear-gradient
+       (top, #a5b8da 0%, #7089b3 100%);
+    background: -webkit-gradient
+       (linear, 0% 0%, 0% 100%,
+       from(#a5b8da), to(#7089b3));
+ 
+    /* Border style */
+    border: 1px solid #5c6f91;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+ 
+    /* Box shadow */
+    -moz-box-shadow: inset 0 1px 0 0 #aec3e5;
+    -webkit-box-shadow: inset 0 1px 0 0 #aec3e5;
+    box-shadow: inset 0 1px 0 0 #aec3e5;
+ 
+}
+
+#sidebar {
+	/*float: right;*/
+	width: 40%;
+	margin: 0px;
+	margin-left: 1.8em;
+	float: left;
+}
+
+/* Footer */
+
+footer {
+	height: 9.375em;
+	margin: 0 auto;
+}
+
+footer p {
+	margin: 0;
+	padding-top: 2.5em;
+	line-height: normal;
+	font-size: 0.75em;
+	letter-spacing: 0.125em;
+	text-transform: uppercase;
+	text-align: center;
+	color: #FFFFFF;
+}
+
+footer a {
+	color: #FFFFFF;
+}
+
+
+@media (min-width: 640px) {
+	#content {
+		float: left;
+		width: 40%;
+	}
+
+	header div#logo h1 {
+		font-size: 4em;
+	}
+
+	* {
+		font-size: 1em;
+	}
+
+	.right {
+		float: none;
+		margin-right: 10.125%;
+	}
+}

@@ -56,7 +56,8 @@ public class MainActivity extends Activity {
 	String[] allRoutes;
 	private boolean firstLoad = false;
 	private int currentID = 0;
-	private String baseURL = "http://192.168.0.207/TrackMyRoute/api/router/";
+	private String baseURL = "http://trackmyroute.fwd.wf/TrackMyRoute/api/router/";
+	Double[][] locations; 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +140,7 @@ public class MainActivity extends Activity {
 			            });
 			        }
 			    };
-			    timer2.schedule(timertask, 3000, 5000); // First run at 3s, update every 5s!
+			    timer2.schedule(timertask, 3000, 6500); // First run at 3s, update every 5s!
 			}
 	    }
 	}
@@ -173,10 +174,10 @@ public class MainActivity extends Activity {
         	   }
            }
 	    	   
- 	  } catch (JSONException e) {
- 	   // TODO Auto-generated catch block
- 	   e.printStackTrace();
- 	  }
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -290,7 +291,6 @@ public class MainActivity extends Activity {
 	public void selectRoute(View view) {
 		 
 		routes = (Spinner) findViewById(R.id.spinner2);
-		description.setText(routes.getSelectedItem().toString());
 		
 		currentID = 0;
 		String test = routes.getSelectedItem().toString();

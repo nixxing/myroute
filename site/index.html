@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>TrackMyRoute</title>
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="content-wrapper">
+	<div id="header-wrapper">
+		<header>
+			<div id="logo">
+				<div class="title"><img src="img/popeye.png" /></div>
+				<p>Add you routes and checkpoints!</p>
+			</div>
+		</header>
+	</div>
+	<div id="wrapper">
+		<!-- end #header -->
+		<div id="page">
+			<div id="content">
+				<form id="routeform" class="rounded" method="post" action="">
+				<h3>ADD ROUTES</h3>
+				 
+				<div class="field">
+				    <label for="name">Route name:</label>
+				    <input type="text" class="input" name="name" id="name" />
+				</div>
+				 
+				<div class="field">
+				    <label for="city">City:</label>
+				    <input type="text" class="input" name="city" id="city" />
+				</div>
+				 
+				<input type="submit" name="Submit" class="button" value="Submit" />
+				</form>	
+		</div>
+		<div id="sidebar">
+			<form id="checkpointform" class="rounded" method="post" action="">
+			<h3>ADD CHECKPOINTS</h3>
+			
+			<div class="field">
+			    <label for="id">Route id:</label>
+			    <input type="text" class="input" name="id" id="id" />
+			</div>
+			
+			<div class="field">
+			    <label for="checkpoint">Checkpoint:</label>
+			    <input type="text" class="input" name="checkpoint" id="checkpoint" />
+			</div>
+
+			<div class="field">
+			    <label for="longitude">Longitude:</label>
+			    <input type="text" class="input" name="longitude" id="longitude" />
+			</div>
+
+			<div class="field">
+			    <label for="latitude">Latitude:</label>
+			    <input type="text" class="input" name="latitude" id="latitude" />
+			</div>
+			 
+			<div class="field">
+			    <label for="description">Description:</label>
+			    <textarea class="input textarea" name="description" id="description">
+			    </textarea>
+			</div>
+			
+			<input type="submit" name="Submit" class="button" value="Submit" />
+			</form>
+		</div>
+	</div>
+	<footer>
+		<p>&copy; 2013 Matthijs Huyghe</p>
+	</footer>
+</div>
+
+<script src="js/jQuery.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>

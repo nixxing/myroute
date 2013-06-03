@@ -57,7 +57,6 @@ public class MainActivity extends Activity {
 	private boolean firstLoad = false;
 	private int currentID = 0;
 	private String baseURL = "http://trackmyroute.fwd.wf/TrackMyRoute/api/router/";
-	Double[][] locations; 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -234,7 +233,7 @@ public class MainActivity extends Activity {
 	               latitude = jo.getDouble("latitude");
 	               longitude = jo.getDouble("longitude");
 	               title = jo.getString("checkpoint");
-	               
+	            		   
 	               setMarker(latitude, longitude, title);
 	           }
 	    	   
@@ -294,7 +293,7 @@ public class MainActivity extends Activity {
 		
 		currentID = 0;
 		String test = routes.getSelectedItem().toString();
-		//String test1 = test.split("\\s")[0];
+
 		for (int r=1; r<allRoutes.length; r++) {
 			if(allRoutes[r] == test) {
 				currentID = r;
@@ -302,6 +301,8 @@ public class MainActivity extends Activity {
 		}
 		
 		String result = getData("route_info/" + Integer.toString(currentID));
+		
+		// Set all the checkpoints
 		setCheckpoints(result);
 	}
 }
